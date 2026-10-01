@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Calculator</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --error-color: #ef4444;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .calculator-card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .calculator-card h1 {
+            margin: 0 0 1.5rem 0;
+            font-size: 1.75rem;
+            text-align: center;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+            background-color: #f9fafb;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: var(--accent-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.875rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .result-container {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            background-color: #f8fafc;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            word-break: break-all;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-value.error {
+            color: var(--error-color);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .result-container.has-error {
+            border-color: #fca5a5;
+            background-color: #fef2f2;
+        }
+        
+        .result-container.has-success {
+            border-color: #bbf7d0;
+            background-color: #f0fdf4;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="calculator-card">
+        <h1>Calculator</h1>
+        <form id="calc-form">
+            <div class="form-group">
+                <label for="num1">First Number</label>
+                <input type="number" id="num1" placeholder="Enter first number" step="any">
+            </div>
+
+            <div class="form-group">
+                <label for="operation">Operation</label>
+                <select id="operation">
+                    <option value="add">Addition (+)</option>
+                    <option value="subtract">Subtraction (-)</option>
+                    <option value="multiply">Multiplication (*)</option>
+                    <option value="divide">Division (/)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="num2">Second Number</label>
+                <input type="number" id="num2" placeholder="Enter second number" step="any">
+            </div>
+
+            <button type="submit" id="calculate-btn">Calculate</button>
+        </form>
+
+        <div class="result-container" id="result-container">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="result-display">--</div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calc-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page reload
+            
+            const num1Input = document.getElementById('num1').value;
+            const num2Input = document.getElementById('num2').value;
+            const operation = document.getElementById('operation').value;
+            const resultDisplay = document.getElementById('result-display');
+            const resultContainer = document.getElementById('result-container');
+            
+            // Reset styles
+            resultDisplay.className = 'result-value';
+            resultContainer.className = 'result-container';
+
+            // Validation: Check if fields are empty
+            if (num1Input === '' || num2Input === '') {
+                resultDisplay.textContent = 'Please enter both numbers.';
+                resultDisplay.classList.add('error');
+                resultContainer.classList.add('has-error');
+                return;
+            }
+
+            const num1 = parseFloat(num1Input);
+            const num2 = parseFloat(num2Input);
+            let result;
+
+            // Perform calculation based on selected operation
+            switch (operation) {
+                case 'add':
+                    result = num1 + num2;
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    break;
+                case 'divide':
+                    // Prevent division by zero
+                    if (num2 === 0) {
+                        resultDisplay.textContent = 'Error: Cannot divide by zero';
+                        resultDisplay.classList.add('error');
+                        resultContainer.classList.add('has-error');
+                        return;
+                    }
+                    result = num1 / num2;
+                    break;
+                default:
+                    resultDisplay.textContent = 'Invalid operation';
+                    resultDisplay.classList.add('error');
+                    resultContainer.classList.add('has-error');
+                    return;
+            }
+
+            // Display successful result
+            resultContainer.classList.add('has-success');
+            // If the number is an integer, display it without decimals, otherwise limit very long decimals
+            resultDisplay.textContent = Number.isInteger(result) ? result : parseFloat(result.toFixed(6));
+        });
+    </script>
+</body>
+</html>
